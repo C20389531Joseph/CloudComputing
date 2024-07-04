@@ -96,7 +96,7 @@ function AddItemForm({ onNewItem }) {
                     value={newItem}
                     onChange={e => setNewItem(e.target.value)}
                     type="text"
-                    placeholder="New Item"
+                    placeholder="A Creative New Item please"
                     aria-describedby="basic-addon1"
                 />
                 <InputGroup.Append>
@@ -106,7 +106,7 @@ function AddItemForm({ onNewItem }) {
                         disabled={!newItem.length}
                         className={submitting ? 'disabled' : ''}
                     >
-                        {submitting ? 'Adding...' : 'Add Item'}
+                        {submitting ? 'Adding...' : 'Add a new Item'}
                     </Button>
                 </InputGroup.Append>
             </InputGroup>
