@@ -1,0 +1,63 @@
+{
+  "location": "westeurope",
+  "properties": {
+    "hardwareProfile": {
+      "vmSize": "Standard_D2s_v3"
+    },
+    "storageProfile": {
+      "imageReference": {
+        "publisher": "canonical",
+        "offer": "0001-com-ubuntu-server-focal",
+        "sku": "20_04-lts-gen2",
+        "version": "latest",
+        "exactVersion": "20.04.202406140"
+      },
+      "osDisk": {
+        "osType": "Linux",
+        "name": "portainer-vm2_disk1",
+        "createOption": "FromImage",
+        "caching": "ReadWrite",
+        "managedDisk": {
+          "storageAccountType": "Premium_LRS",
+          "diskSizeGB": 30
+        },
+        "deleteOption": "Delete"
+      },
+      "dataDisks": []
+    },
+    "osProfile": {
+      "computerName": "portainer-vm2",
+      "adminUsername": "azureuser",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": false,
+        "provisionVMAgent": true,
+        "patchSettings": {
+          "patchMode": "AutomaticByPlatform",
+          "assessmentMode": "ImageDefault"
+        }
+      },
+      "secrets": [],
+      "allowExtensionOperations": true,
+      "requireGuestProvisionSignal": true
+    },
+    "securityProfile": {
+      "uefiSettings": {
+        "secureBootEnabled": true,
+        "vTpmEnabled": true
+      },
+      "securityType": "TrustedLaunch"
+    },
+    "networkProfile": {
+      "networkInterfaces": [
+        {
+          "id": "/subscriptions/83282bd3-3a4f-40b5-b38c-c279cccf992d/resourceGroups/lab4p2/providers/Microsoft.Network/networkInterfaces/portainer-vm2_nic"
+        }
+      ]
+    },
+    "diagnosticsProfile": {
+      "bootDiagnostics": {
+        "enabled": true
+      }
+    }
+  }
+}

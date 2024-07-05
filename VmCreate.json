@@ -1,0 +1,81 @@
+subscription_id="<subscription_id>"
+resource_group="lab4p2"
+location="westeurope"
+vm_name="portainer-vm2"
+public_ip_id="/subscriptions/${subscription_id}/resourceGroups/${resource_group}/providers/Microsoft.Network/publicIPAddresses/${public_ip_name}"
+subnet_id="/subscriptions/${subscription_id}/resourceGroups/${resource_group}/providers/Microsoft.Network/virtualNetworks/portainer-vm2-vnet/subnets/default"
+network_interface_id="/subscriptions/${subscription_id}/resourceGroups/${resource_group}/providers/Microsoft.Network/networkInterfaces/portainer-vm2-nic"
+
+# Create VM JSON template file
+cat <<EOF > vm.json
+{
+  "name": "${vm_name}",
+  "location": "${location}",
+  "properties": {
+    "hardwareProfile": {
+      "vmSize": "Standard_D2s_v3"
+    },
+    "storageProfile": {
+      "imageReference": {
+        "publisher": "canonical",
+        "offer": "0001-com-ubuntu-server-focal",
+        "sku": "20_04-lts-gen2",
+        "version": "latest",
+        "exactVersion": "20.04.202406140"
+      },
+      "osDisk": {
+        "osType": "Linux",
+        "name": "${vm_name}_osdisk",
+        "createOption": "FromImage",
+        "caching": "ReadWrite",
+        "managedDisk": {
+          "storageAccountType": "Premium_LRS"
+        },
+        "diskSizeGB": 30
+      }
+    },
+    "osProfile": {
+      "computerName": "${vm_name}",
+      "adminUsername": "azureuser",
+      "linuxConfiguration": {
+        "disablePasswordAuthentication": false,
+        "provisionVMAgent": true,
+        "patchSettings": {
+          "patchMode": "AutomaticByPlatform",
+          "assessmentMode": "ImageDefault"
+        }
+      }
+    },
+    "networkProfile": {
+      "networkInterfaces": [
+        {
+          "id": "${network_interface_id}"
+        }
+      ]
+    },
+    "diagnosticsProfile": {
+      "bootDiagnostics": {
+        "enabled": true
+      }
+    }
+  },
+  "tags": {}
+}
+EOF
+
+# Deploy VM
+az vm create \
+    --subscription "${subscription_id}" \
+    --resource-group "${resource_group}" \
+    --name "${vm_name}" \
+    --location "${location}" \
+    --attach-os-disk "${vm_name}_osdisk" \
+    --nics "${network_interface_id}" \
+    --public-ip-address "" \
+    --validate \
+    --no-wait \
+    --image UbuntuServer \
+    --admin-username "azureuser" \
+    --admin-password "your_password_or_ssh_key_here" \  # Replace with your SSH key or password
+    --authentication-type "ssh" \
+    --ssh-key-value "/path/to/your/ssh_public_key.pub"  # Replace with your SSH public key path
